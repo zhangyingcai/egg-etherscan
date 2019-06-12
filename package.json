@@ -1,0 +1,29 @@
+{
+  "name": "egg-etherscan",
+  "version": "1.0.0",
+  "description": "etherscan-api-bcat",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "egg-bin dev --port 7001"
+  },
+  "keywords": [
+    "bcat",
+    "explorer"
+  ],
+  "author": "zhangyc",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "egg"
+  },
+  "dependencies": {
+    "egg": "^2.22.2",
+    "egg-mysql": "^3.0.0",
+    "egg-validate": "^2.0.2",
+    "etherscan-api": "^10.0.0"
+  },
+  "devDependencies": {
+    "egg-bin": "^4.13.0"
+  }
+}

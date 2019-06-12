@@ -1,0 +1,43 @@
+DROP TABLE IF EXISTS `ethereum`;
+CREATE TABLE `ethereum` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `hash` varchar(250) DEFAULT NULL COMMENT 'txhash',
+  `from` varchar(250) DEFAULT NULL,
+  `to` varchar(250) DEFAULT NULL,
+  `blockHash` varchar(250) DEFAULT NULL,
+  `blockNumber` int(10) UNSIGNED DEFAULT NULL,
+  `timestamp` int(10) UNSIGNED DEFAULT NULL,
+  `nonce` int(10) UNSIGNED DEFAULT NULL,
+  `value`  varchar(250) DEFAULT NULL,
+  `confirmations` int(10) UNSIGNED DEFAULT NULL COMMENT '确认数',
+  `tokenDecimal` int(10) UNSIGNED DEFAULT NULL COMMENT '位数',
+  `transactionIndex` varchar(250) DEFAULT NULL,
+  `input` varchar(250) DEFAULT NULL,
+  `gas`  varchar(250) DEFAULT NULL,
+  `gasPrice`  varchar(250) DEFAULT NULL,
+  `gasUsed`  varchar(250) DEFAULT NULL,
+  `status` tinyint(3) unsigned DEFAULT NULL COMMENT '数据处理状态： 0 - 未处理 1 - 已处理,有效数据 2 - 已处理，无效数据',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UQ_hash` (`hash`) USING BTREE,
+  KEY `IX_block` (`blockNumber`) USING BTREE,
+  KEY `IX_from` (`from`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=586 DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS `config`;
+CREATE TABLE `config` (
+  `config_name` varchar(255) NOT NULL COMMENT '参数名',
+  `config_value` varchar(250) DEFAULT NULL COMMENT '参数值',
+  PRIMARY KEY (`config_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统参数表，以键:值存储数据';
+
+DROP TABLE IF EXISTS `holder`;
+CREATE TABLE `holder` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `address` varchar(250) DEFAULT NULL,
+  `value` varchar(250) DEFAULT NULL,
+  `created` int(10) unsigned DEFAULT NULL COMMENT '创建（导入）时间',
+  `updated` int(10) unsigned DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UQ_address` (`address`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=586 DEFAULT CHARSET=utf8;
