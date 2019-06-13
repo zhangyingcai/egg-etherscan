@@ -4,6 +4,7 @@ exports.contractaddress = '0xfDEAA4ab9fea519aFD74df2257A21e5BcA0DFd3f'; // 合�
 exports.txlisturl = 'http://api.etherscan.io/api?module=account&action=tokentx'; // token交易列表
 exports.balanceurl = 'https://api.etherscan.io/api?module=account&action=tokenbalance';
 exports.supplyurl = 'https://api.etherscan.io/api?module=stats&action=tokensupply';
+exports.tokenDecimal = 18;
 exports.mysql = {
   client: {
     host: 'localhost',

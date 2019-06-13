@@ -14,13 +14,14 @@ class tokentxController extends Controller {
   async holders(){
     const ctx = this.ctx;
     const rule = {
-      page: { type: 'number' },
-      limit: { type: 'number' },
+      page: { type: 'string' },
+      limit: { type: 'string' },
       sort: { type: 'string' }
     }
 
-    const request = ctx.request.body;
-    await ctx.validate(rule, request);
+    const request = ctx.query;
+    console.log('--holders--',request);
+    
     const result = await ctx.service.tokenapi.holders(request);
     ctx.body = result;
   }

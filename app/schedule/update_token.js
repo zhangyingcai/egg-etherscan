@@ -4,7 +4,7 @@ class UpdateToken extends Subscription {
   // 配置信息
   static get schedule(){
     return {
-      interval: '5m',
+      interval: '10m',
       type: 'all'
     }
   }

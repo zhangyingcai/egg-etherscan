@@ -1,5 +1,5 @@
 const Service = require('egg').Service;
-const {supplyurl,balanceurl,txlisturl,apikey,contractaddress} = require('../../config/config.default');
+const {supplyurl,balanceurl,txlisturl,apikey,contractaddress,tokenDecimal} = require('../../config/config.default');
 
 class TokenService extends Service {
   async update(){
@@ -10,7 +10,7 @@ class TokenService extends Service {
     const sort = 'asc';
     const txUrl = `${txlisturl}&apikey=${apikey}&contractaddress=${contractaddress}&sort=${sort}&startblock=${startblock}&endblock=${endblock}`;
     // 请求数据
-    const txlist = await this.ctx.curl(txUrl,{dataType: 'json',timeout: 60 * 1000});
+    const txlist = await this.ctx.curl(txUrl,{dataType: 'json',timeout: 600 * 1000});
     // 处理数据
     const txlistObj = txlist.data;
     if (txlistObj.status === '1') {// success
@@ -37,7 +37,7 @@ class TokenService extends Service {
         // 提交数据
         await this.app.mysql.insert('ethereum', {...elementData,status:0});
         // 是否是新增地址 -> 新增持有地址
-        const created = new Date().getTime();
+        const created = new Date().getTime() / 1000;
         const from = await this.app.mysql.get('holder', {address:element.from});
         if (!from) {
           await this.app.mysql.insert('holder', {address:element.from,created:created})
@@ -72,14 +72,25 @@ class TokenService extends Service {
 
   // update all holders
   async holder(){
+    const timer = new Date().getTime() / 1000 - 24 * 60 * 60;
+    // 获取中数量
+    const res = await this.app.mysql.get('config',{config_name:'tokenbalance'});
+    let balance = 0;
+    if(res){
+      balance = res.config_value / Math.pow(10, tokenDecimal);
+    }
     // 获取数据
-    const results = await this.app.mysql.select('holder');
+    const results = await this.app.mysql.query('SELECT * FROM `holder` WHERE `updated` IS NULL OR `updated` < '+ timer +' LIMIT 10');
+    // const results = await this.app.mysql.select('holder',);
     // 更新数据
     if(results.length){
       await Promise.all(
         results.map(async item=> {
           const latestbalance = await this.balance(item.address);
-          await this.app.mysql.update('holder',{value: latestbalance}, {where:{id: item.id}});
+          const newtimer = new Date().getTime() / 1000;
+          const num = latestbalance / Math.pow(10, tokenDecimal);
+          const percentage = num / balance * 100;
+          await this.app.mysql.update('holder',{value: latestbalance, updated:newtimer, percentage:percentage, tokenDecimal:tokenDecimal}, {where:{id: item.id}});
         })
       ).then((result) => {
         console.log('---holder all---');

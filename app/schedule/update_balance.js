@@ -4,14 +4,14 @@ class UpdateBalance extends Subscription {
   // 配置信息
   static get schedule(){
     return {
-      interval: '5m',
+      interval: '2m',
       type: 'all'
     }
   }
   
   async subscribe(){
+    await this.ctx.service.token.supply(); 
     this.ctx.service.token.holder();
-    this.ctx.service.token.supply(); 
   }
 }
 
