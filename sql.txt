@@ -36,8 +36,11 @@ CREATE TABLE `holder` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `address` varchar(250) DEFAULT NULL,
   `value` varchar(250) DEFAULT NULL,
-  `created` int(10) unsigned DEFAULT NULL COMMENT '创建（导入）时间',
-  `updated` int(10) unsigned DEFAULT NULL COMMENT '更新时间',
+  `tokenDecimal` int(10) UNSIGNED DEFAULT NULL COMMENT '位数',
+  `percentage` DECIMAL(20,5) DEFAULT NULL,
+  `tag` varchar(250) DEFAULT NULL,
+  `created` int(20) unsigned DEFAULT NULL COMMENT '创建（导入）时间',
+  `updated` int(20) unsigned DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `UQ_address` (`address`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=586 DEFAULT CHARSET=utf8;
