@@ -16,3 +16,9 @@ exports.mysql = {
   app: true,
   agent: false
 }
+exports.security = {
+  domainWhiteList: [ 'http://localhost' ],
+}
+exports.cors = {
+  origin: '*'
+}
