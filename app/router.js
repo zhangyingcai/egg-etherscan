@@ -7,4 +7,5 @@ module.exports = app => {
   router.get('/tokentx', controller.api.list);
   router.get('/txinfo', controller.api.eth_getTransactionByHash);
   router.get('/holders', controller.tokentx.holders);
+  router.get('/accountinfo', controller.tokentx.token);
 }

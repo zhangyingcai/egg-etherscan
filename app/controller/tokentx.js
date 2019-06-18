@@ -13,16 +13,21 @@ class tokentxController extends Controller {
 
   async holders(){
     const ctx = this.ctx;
-    const rule = {
-      page: { type: 'string' },
-      limit: { type: 'string' },
-      sort: { type: 'string' }
-    }
-
+    
     const request = ctx.query;
-    console.log('--holders--',request);
     
     const result = await ctx.service.tokenapi.holders(request);
+    ctx.body = result;
+  }
+  async token(){
+    const ctx = this.ctx;
+    
+    const request = ctx.query;
+
+    const rule = {address: {type:'string'}};
+    
+    ctx.validate(rule, request);
+    const result = await ctx.service.tokenapi.token(request);
     ctx.body = result;
   }
 }
