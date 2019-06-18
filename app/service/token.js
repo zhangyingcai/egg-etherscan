@@ -1,8 +1,9 @@
 const Service = require('egg').Service;
-const { supplyurl, balanceurl, txlisturl, apikey, contractaddress, tokenDecimal } = require('../../config/config.default');
+const { supplyurl, balanceurl, txlisturl, apikey, contractaddress, tokenDecimal, appeth } = require('../../config/config.default');
 
 class TokenService extends Service {
   async update() {
+    // 官方地址不计算 计算流通量
     console.log('-----进入定时任务----');
     try {
       // 组装url get
@@ -24,7 +25,7 @@ class TokenService extends Service {
             to: element.to,
             blockHash: element.blockHash,
             blockNumber: element.blockNumber,
-            timestamp: element.timestamp,
+            timeStamp: element.timeStamp,
             nonce: element.nonce,
             value: element.value,
             confirmations: element.confirmations,
@@ -85,6 +86,8 @@ class TokenService extends Service {
     if (res) {
       balance = res.config_value / Math.pow(10, tokenDecimal);
     }
+
+    const appbalance = (await this.app.mysql.get('config', { config_name: 'appbalance' }) || 0) / Math.pow(10, tokenDecimal);
     // 获取数据
     const results = await this.app.mysql.query('SELECT * FROM `holder` WHERE `updated` IS NULL OR `updated` < ' + timer + ' LIMIT 10');
     // const results = await this.app.mysql.select('holder',);
@@ -95,7 +98,10 @@ class TokenService extends Service {
           const latestbalance = await this.balance(item.address);
           const newtimer = new Date().getTime() / 1000;
           const num = latestbalance / Math.pow(10, tokenDecimal);
-          const percentage = num / balance * 100;
+          let percentage = num / (balance - appbalance) * 100;
+          if(item.address === appeth){
+            percentage = '100'; // 官方地址
+          }
           await this.app.mysql.update('holder', { value: latestbalance, updated: newtimer, percentage: percentage, tokenDecimal: tokenDecimal }, { where: { id: item.id } });
         })
       ).then((result) => {
@@ -132,6 +138,15 @@ class TokenService extends Service {
     }
   }
 
+  async appsupply(){
+    const appbalance = await this.balance(appeth);
+    const isexsit = this.app.mysql.get('config',{config_name:'appbalance'})
+    if(isexsit){
+      await this.app.mysql.update('config', { config_value: appbalance }, { where: { config_name: 'tokenbalance' } });
+    } else {
+      await this.app.mysql.insert('config', { config_value: appbalance, config_name: 'tokenbalance' });
+    }
+  }
 
 }
 
