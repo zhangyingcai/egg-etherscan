@@ -62,6 +62,44 @@ class TokenApiService extends Service{
     }
     return res
   }
+  // 交易哈希详情
+  async txinfo(params){
+    
+    const results = await this.app.mysql.get('ethereum', {hash:params.hash});
+    let res = {};
+    if (results) {
+      res.status= '1';
+      res.result= results;
+      res.message= 'success'
+    }else{
+      res.status = '0';
+      res.message = '暂无数据'
+    }
+    return res;
+  }
+
+  // 获取 token supply
+  async tokensupply(){
+    const result = await this.app.mysql.get('config', { config_name: 'tokenbalance' });
+    let balance = 0;
+    if (result) {
+      balance = result.config_value;
+    }
+    return balance;
+  }
+
+  // transactions
+  async transactions(params){
+    const page = Number(params.page) || 1;
+    const limit = Number(params.limit) || 10;
+    const results = await this.app.mysql.select('ethereum',{
+      orders:[['timeStamp', 'desc']],
+      limit: Number(limit),
+      offset: Number(limit) * Number(page-1),
+    });
+    // const results = await this.app.mysql.query('select  * from( select holder.tag as fromtag,ethereum.id,ethereum.hash,ethereum.from,ethereum.to,ethereum.timeStamp,ethereum.value,ethereum.tokenDecimal from `ethereum`  left join `holder` on ethereum.from=holder.address)as a,(select holder.tag as totag from `ethereum`  left join `holder` on ethereum.to = holder.address ) as b ORDER BY `timeStamp` desc LIMIT '+Number(limit)+' OFFSET '+Number(limit) * Number(page-1) );
+    return results;
+  }
 }
 
 module.exports = TokenApiService;
