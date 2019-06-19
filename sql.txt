@@ -6,13 +6,16 @@ CREATE TABLE `ethereum` (
   `to` varchar(250) DEFAULT NULL,
   `blockHash` varchar(250) DEFAULT NULL,
   `blockNumber` int(10) UNSIGNED DEFAULT NULL,
-  `timestamp` int(10) UNSIGNED DEFAULT NULL,
+  `timeStamp` int(10) UNSIGNED DEFAULT NULL,
   `nonce` int(10) UNSIGNED DEFAULT NULL,
   `value`  varchar(250) DEFAULT NULL,
   `confirmations` int(10) UNSIGNED DEFAULT NULL COMMENT '确认数',
   `tokenDecimal` int(10) UNSIGNED DEFAULT NULL COMMENT '位数',
+  `tokenName`  varchar(250) DEFAULT NULL,
+  `tokenSymbol`  varchar(250) DEFAULT NULL,
   `transactionIndex` varchar(250) DEFAULT NULL,
   `input` varchar(250) DEFAULT NULL,
+  `cumulativeGasUsed`  varchar(250) DEFAULT NULL,
   `gas`  varchar(250) DEFAULT NULL,
   `gasPrice`  varchar(250) DEFAULT NULL,
   `gasUsed`  varchar(250) DEFAULT NULL,
@@ -44,3 +47,9 @@ CREATE TABLE `holder` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `UQ_address` (`address`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=586 DEFAULT CHARSET=utf8;
+
+select  * as totag
+from(select * from `ethereum`  left join `holder` on ethereum.from=holder.address)as a,(select holder.tag from `ethereum`  left join `holder` on ethereum.to=holder.address)as b order by id limit 10 offset 0
+
+select  * 
+from( select holder.tag as fromtag from `ethereum`  left join `holder` on ethereum.from=holder.address)as a,(select holder.tag as totag from `ethereum`  left join `holder` on ethereum.to = holder.address ) as b
