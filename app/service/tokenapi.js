@@ -36,7 +36,7 @@ class TokenApiService extends Service{
     const limit = Number(params.limit) || 10;
     // token balance tokenDecimal
     const balanceRes = await this.app.mysql.get('holder',{address:address});
-    let balance,tokenDecimal,tag = 0;
+    let balance,tokenDecimal,tag = '';
     if(balanceRes){
       balance = balanceRes.value;
       tokenDecimal = balanceRes.tokenDecimal;
