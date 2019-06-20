@@ -47,7 +47,7 @@ class TokenService extends Service {
           
           // 是否是新增地址 -> 新增持有地址
           const created = new Date().getTime() / 1000;
-          const from = await this.app.mysql.get('holder', { address: element.from });
+          const from = await this.app.mysql.get('holder', { address: element.from.toLowerCase() });
           if (!from) {
             this.app.mysql.insert('holder', { address: element.from.toLowerCase(), created: created })
           }
