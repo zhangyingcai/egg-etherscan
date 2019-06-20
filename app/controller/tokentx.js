@@ -11,10 +11,11 @@ class tokentxController extends Controller {
     this.ctx.body = 'hello egg';
   }
   // success
-  success(result) {
+  success(result,total) {
     this.ctx.body = {
       status: '1',
       result,
+      total
     };
   }
   // 排行榜
@@ -61,7 +62,8 @@ class tokentxController extends Controller {
     const ctx = this.ctx;
     const request = ctx.query;
     const result = await ctx.service.tokenapi.transactions(request);
-    this.success(result);
+    const total = await ctx.service.tokenapi.transactionTotal();
+    this.success(result,total);
   }
 }
 

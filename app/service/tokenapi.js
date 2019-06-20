@@ -44,6 +44,8 @@ class TokenApiService extends Service{
     }
     // token list
     const results = await this.app.mysql.query('SELECT * FROM `ethereum` WHERE `from` LIKE "' + address + '" OR `to` LIKE "' + address +'" ORDER BY `id` LIMIT '+Number(limit)+' OFFSET '+Number(limit) * Number(page-1) );
+    const count = await this.app.mysql.query('SELECT COUNT(*) FROM `ethereum` WHERE `from` LIKE "' + address + '" OR `to` LIKE "' + address + '"' );
+    console.log(count)
     // totalsupply
     const restotal = await this.app.mysql.get('config', { config_name: 'tokenbalance' });
     let totalsupply = 0;
@@ -58,7 +60,8 @@ class TokenApiService extends Service{
       tag: tag,
       contract:contractaddress,
       totalsupply: totalsupply,
-      result:results
+      result:results,
+      total: count.shift()['COUNT(*)']
     }
     return res
   }
@@ -99,6 +102,11 @@ class TokenApiService extends Service{
     });
     // const results = await this.app.mysql.query('select  * from( select holder.tag as fromtag,ethereum.id,ethereum.hash,ethereum.from,ethereum.to,ethereum.timeStamp,ethereum.value,ethereum.tokenDecimal from `ethereum`  left join `holder` on ethereum.from=holder.address)as a,(select holder.tag as totag from `ethereum`  left join `holder` on ethereum.to = holder.address ) as b ORDER BY `timeStamp` desc LIMIT '+Number(limit)+' OFFSET '+Number(limit) * Number(page-1) );
     return results;
+  }
+  // transactiontotal
+  async transactionTotal(){
+    const count = await this.app.mysql.query('SELECT COUNT(*) FROM `ethereum`');
+    return count.shift()['COUNT(*)'] || 0
   }
 }
 
