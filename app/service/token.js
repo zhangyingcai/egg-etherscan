@@ -51,7 +51,7 @@ class TokenService extends Service {
           if (!from) {
             this.app.mysql.insert('holder', { address: element.from.toLowerCase(), created: created })
           }
-          const to = await this.app.mysql.get('holder', { address: element.to });
+          const to = await this.app.mysql.get('holder', { address: element.to.toLowerCase() });
           if (!to) {
             this.app.mysql.insert('holder', { address: element.to.toLowerCase(), created: created })
           }
