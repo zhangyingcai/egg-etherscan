@@ -21,8 +21,8 @@ class TokenService extends Service {
           // 数据处理
           const elementData = {
             hash: element.hash,
-            from: element.from,
-            to: element.to,
+            from: element.from.toLowerCase(),
+            to: element.to.toLowerCase(),
             blockHash: element.blockHash,
             blockNumber: element.blockNumber,
             timeStamp: element.timeStamp,
@@ -49,11 +49,11 @@ class TokenService extends Service {
           const created = new Date().getTime() / 1000;
           const from = await this.app.mysql.get('holder', { address: element.from });
           if (!from) {
-            this.app.mysql.insert('holder', { address: element.from, created: created })
+            this.app.mysql.insert('holder', { address: element.from.toLowerCase(), created: created })
           }
           const to = await this.app.mysql.get('holder', { address: element.to });
           if (!to) {
-            this.app.mysql.insert('holder', { address: element.to, created: created })
+            this.app.mysql.insert('holder', { address: element.to.toLowerCase(), created: created })
           }
           // 结束事务
         }))
