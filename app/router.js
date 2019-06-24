@@ -10,6 +10,6 @@ module.exports = app => {
   router.get('/transactions', controller.tokentx.transactions);
 
   // api
-  router.post('/signin', controller.user.signin);
-  router.get('/signup', controller.user.signup);
+  router.post('/user/signin', controller.user.signin);
+  router.get('/user/signup', controller.user.signup);
 }
