@@ -1,5 +1,7 @@
 const Service = require('egg').Service;
-const {  contractaddress } = require('../../config/config.default');
+const {  contractaddress, apikey } = require('../../config/config.default');
+// var api = require('etherscan-api').init(apikey);
+
 
 class TokenApiService extends Service{
   // holders
@@ -91,16 +93,32 @@ class TokenApiService extends Service{
     return balance;
   }
 
-  // transactions
-  async transactions(params){
+  // destroy
+  async destroy(params){
     const page = Number(params.page) || 1;
     const limit = Number(params.limit) || 10;
-    const results = await this.app.mysql.select('ethereum',{
+    const results = await this.app.mysql.select('destroy',{
       orders:[['timeStamp', 'desc']],
       limit: Number(limit),
       offset: Number(limit) * Number(page-1),
     });
-    // const results = await this.app.mysql.query('select  * from( select holder.tag as fromtag,ethereum.id,ethereum.hash,ethereum.from,ethereum.to,ethereum.timeStamp,ethereum.value,ethereum.tokenDecimal from `ethereum`  left join `holder` on ethereum.from=holder.address)as a,(select holder.tag as totag from `ethereum`  left join `holder` on ethereum.to = holder.address ) as b ORDER BY `timeStamp` desc LIMIT '+Number(limit)+' OFFSET '+Number(limit) * Number(page-1) );
+    return results;
+  }
+  // destroytotal
+  async destroyTotal(){
+    const count = await this.app.mysql.query('SELECT COUNT(*) FROM `destroy`');
+    return count.shift()['COUNT(*)'] || 0
+  }
+  // transactions
+  async transactions(params){
+    const page = Number(params.page) || 1;
+    const limit = Number(params.limit) || 10;
+    // const results = await this.app.mysql.select('ethereum',{
+    //   orders:[['timeStamp', 'desc']],
+    //   limit: Number(limit),
+    //   offset: Number(limit) * Number(page-1),
+    // });
+    const results = await this.app.mysql.query('select ethereum.value,ethereum.hash,ethereum.tokenDecimal,ethereum.from,ethereum.to,ethereum.`timeStamp`,ethereum.id,a.tag as fromtag,b.tag as totag from `ethereum` left join `holder` as a on ethereum.from=a.address left join `holder` as b on ethereum.to = b.address ORDER BY `timeStamp` desc LIMIT '+Number(limit)+' OFFSET '+Number(limit) * Number(page-1) );
     return results;
   }
   // transactiontotal
@@ -108,6 +126,23 @@ class TokenApiService extends Service{
     const count = await this.app.mysql.query('SELECT COUNT(*) FROM `ethereum`');
     return count.shift()['COUNT(*)'] || 0
   }
+  // 
+  // async clears(){
+  //   const result = await api.account.txlist(contractaddress, 1, 'latest', 1, 100, 'desc');
+  //   return result;
+  // }
+  // async eth_getTransactionByHash(params){
+  //   const result = await api.proxy.eth_getTransactionByHash(params.hash);
+  //   return result;
+  // }
+  // async tokentx(){
+  //   const result = await api.account.tokentx(contractaddress, contractaddress, 1, 'latest', 'desc');
+  //   return result;
+  // }
+  // async eth_getTransactionByBlockNumberAndIndex(params){
+  //   const result = await api.proxy.eth_getTransactionByBlockNumberAndIndex(params.blocknumber, params.index);
+  //   return result;
+  // }
 }
 
 module.exports = TokenApiService;
