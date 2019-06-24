@@ -34,6 +34,19 @@ class userController extends Controller {
     const result = await ctx.service.user.signup(requestMsg);
     ctx.body = result;
   }
+
+  // signout
+  async signout(){
+    const ctx = this.ctx;
+    
+
+    const requestMsg = ctx.query;
+    // await ctx.validate(rule, requestMsg);
+
+    //server
+    const result = await ctx.service.user.signout(requestMsg);
+    ctx.body = result;
+  }
 }
 
 module.exports = userController;

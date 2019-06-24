@@ -27,8 +27,7 @@ class userService extends Service {
           )
         res.code = 1;
         res.message = '登录成功';
-        res.result = result;
-        res.token = token;
+        res.result = {id:result.id,userName:result.userName,token:token};
       } else {
         res.code = 40001;
         res.message = '密码错误';
@@ -57,6 +56,16 @@ class userService extends Service {
       res.message = '注册成功';
       res.result = user;
     }
+    return res;
+  }
+
+  // signout
+  async signout(requestMsg){
+    const ctx = this.ctx;
+    const res = {};
+
+    res.code = 1;
+    res.message = '登出成功';
     return res;
   }
 }
