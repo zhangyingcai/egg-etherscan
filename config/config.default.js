@@ -36,3 +36,12 @@ exports.security = {
 exports.cors = {
   origin: '*'
 }
+
+// jsonwebtoken
+exports.jwt = {
+  secret: 'egg-api-jwt',
+  expiresIn: 60 * 60 // token 生效时间
+}
+
+// 加盐
+exports.pwd_salt = 'egg-api-salt';
