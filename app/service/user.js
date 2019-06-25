@@ -10,7 +10,6 @@ class userService extends Service {
     const res = {};
 
     const result = await this.app.mysql.get('user', { userName:requestMsg.userName });
-    console.log(result, 'result');
     if (!result) {
       res.code = 0;
       res.message = '用户不存在'
@@ -21,7 +20,7 @@ class userService extends Service {
       const oldPass = md5.update(requestMsg.userPass).digest('hex');
       if (oldPass === result.userPass) {
         const token = JWT.sign(
-          {userName: result.userPass},
+          {userName: result.userName},
           this.config.jwt.secret,
           { expiresIn: this.config.jwt.expiresIn }
           )
@@ -66,6 +65,35 @@ class userService extends Service {
 
     res.code = 1;
     res.message = '登出成功';
+    return res;
+  }
+
+  // updateUser
+  async update(requestMsg){
+    const ctx = this.ctx;
+    const res = {};
+    // md5 每个竟然都要一个实例
+    const md51 = crypto.createHash('md5');
+    requestMsg.oldPass = await md51.update(requestMsg.oldPass).digest('hex');
+    const result = await this.app.mysql.get('user', { id:requestMsg.id });
+    if (result) {
+      if (result.userPass === requestMsg.oldPass) {
+        const md5 = crypto.createHash('md5');
+        requestMsg.newPass = await md5.update(requestMsg.newPass).digest('hex');
+
+        const results = await this.app.mysql.update('user', {id: requestMsg.id, userPass: requestMsg.newPass});
+        
+        res.code = 1;
+        res.message = '修改成功';
+      } else {
+        res.code = 0;
+        res.message = '旧密码错误';
+      }
+    } else {
+      res.code = 0;
+      res.message = '用户不存在'
+    }
+
     return res;
   }
 }

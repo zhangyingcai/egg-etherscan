@@ -45,3 +45,11 @@ exports.jwt = {
 
 // 加盐
 exports.pwd_salt = 'egg-api-salt';
+
+
+// close 
+exports.security = {
+  csrf: {
+    enable: false,
+  },
+};

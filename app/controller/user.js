@@ -26,7 +26,6 @@ class userController extends Controller {
     };
 
     const requestMsg = ctx.query;
-    console.log(requestMsg, 'requestMsg')
     await ctx.validate(rule, requestMsg);
     requestMsg.userPass = ctx.helper.encrypt(requestMsg.userPass);
 
@@ -45,6 +44,26 @@ class userController extends Controller {
 
     //server
     const result = await ctx.service.user.signout(requestMsg);
+    ctx.body = result;
+  }
+
+  // signout
+  async update(){
+    const ctx = this.ctx;
+    
+    const rule = {
+      id: { type: 'string', required: true, message: '必填项' },
+      oldPass: { type: 'string', required: true },
+      newPass: { type: 'string', required: true },
+    };
+
+    const requestMsg = ctx.request.body;
+    requestMsg.oldPass = ctx.helper.encrypt(requestMsg.oldPass);
+    requestMsg.newPass = ctx.helper.encrypt(requestMsg.newPass);
+    await ctx.validate(rule, requestMsg);
+
+    //server
+    const result = await ctx.service.user.update(requestMsg);
     ctx.body = result;
   }
 }
