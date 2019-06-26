@@ -13,7 +13,7 @@ module.exports = app => {
   // api
   // user
   router.post('/user/signin', controller.user.signin);
-  router.get('/user/signup', controller.user.signup);
+  // router.get('/user/signup', controller.user.signup);
   router.post('/user/signout', token, controller.user.signout);
   router.post('/user/update', token, controller.user.update);
   // des
