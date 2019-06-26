@@ -1,5 +1,5 @@
 const Service = require('egg').Service;
-const {  contractaddress, apikey } = require('../../config/config.default');
+const {  contractaddress } = require('../../config/config.default');
 // var api = require('etherscan-api').init(apikey);
 
 
