@@ -15,9 +15,12 @@ class destroyService extends Service {
       offset: limit * Number(page-1),
     });
 
+    const total = await this.count()
+
     res.code = 1;
     res.message = 'success';
     res.result = results;
+    res.total = total;
     return res;
   }
 
@@ -25,7 +28,6 @@ class destroyService extends Service {
   async create(requestMsg){
     const ctx = this.ctx;
     const res = {};
-    console.log(requestMsg)
     const result = await this.app.mysql.insert('destroy', requestMsg);
 
     res.code = 1;
@@ -57,6 +59,12 @@ class destroyService extends Service {
     res.code = 1;
     res.message = 'success';
     return res;
+  }
+
+  async count(){
+    const count = await this.app.mysql.query('SELECT COUNT(*) FROM `destroy`' );
+    const total = count.shift()['COUNT(*)'];
+    return total;
   }
 }
 
