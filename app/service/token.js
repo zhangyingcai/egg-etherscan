@@ -86,7 +86,7 @@ class TokenService extends Service {
 
   // update all holders
   async holder() {
-    const timer = new Date().getTime() / 1000 - 12 * 60 * 60;
+    const timer = new Date().getTime() / 1000 - 2 * 60 * 60;
     // 获取中数量
     const res = await this.app.mysql.get('config', { config_name: 'tokenbalance' });
     let balance = 0;
@@ -99,7 +99,7 @@ class TokenService extends Service {
       appbalance = appres.config_value / Math.pow(10, tokenDecimal);
     }
     // 获取数据
-    const results = await this.app.mysql.query('SELECT * FROM `holder` WHERE `updated` IS NULL OR `updated` < ' + timer + ' LIMIT 10');
+    const results = await this.app.mysql.query('SELECT * FROM `holder` WHERE `updated` IS NULL OR `updated` < ' + timer + ' ORDER BY `holder`.`updated` ASC LIMIT 5');
     // const results = await this.app.mysql.select('holder',);
     // 更新数据
     if (results.length) {
@@ -109,6 +109,7 @@ class TokenService extends Service {
           const newtimer = new Date().getTime() / 1000;
           const num = latestbalance / Math.pow(10, tokenDecimal);
           let percentage = num / (balance - appbalance) * 100;
+          console.log(percentage, item.address, latestbalance)
           await this.app.mysql.update('holder', { value: latestbalance, updated: newtimer, percentage: percentage, tokenDecimal: tokenDecimal }, { where: { id: item.id } });
         })
       ).then((result) => {
