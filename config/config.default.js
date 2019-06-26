@@ -5,7 +5,7 @@ exports.apikey = 'K7T921SQKMBW35UTUIVI5YU2VJX76IUQSV';
 // bcat contractaddress
 exports.contractaddress = '0xfDEAA4ab9fea519aFD74df2257A21e5BcA0DFd3f'; // 合约地址
 // bcat 交易列表
-exports.txlisturl = 'http://api.etherscan.io/api?module=account&action=tokentx';
+exports.txlisturl = 'https://api.etherscan.io/api?module=account&action=tokentx';
 // balance by address
 exports.balanceurl = 'https://api.etherscan.io/api?module=account&action=tokenbalance';
 // supply by contractaddress
