@@ -1,6 +1,6 @@
 const Service = require('egg').Service;
 
-class destroyService extends Service {
+class holderService extends Service {
 
   // list
   async list(requestMsg){
@@ -9,18 +9,15 @@ class destroyService extends Service {
     const limit = Number(requestMsg.limit) || 10;
     const page = Number(requestMsg.page) || 1;
 
-    const results = await this.app.mysql.select('destroy',{
-      orders:[['timeStamp', 'desc']],
+    const results = await this.app.mysql.select('holder',{
+      orders:[['percentage', 'desc']],
       limit: limit,
       offset: limit * Number(page-1),
     });
 
-    const total = await this.count()
-
     res.code = 1;
     res.message = 'success';
     res.result = results;
-    res.total = total;
     return res;
   }
 
@@ -28,7 +25,8 @@ class destroyService extends Service {
   async create(requestMsg){
     const ctx = this.ctx;
     const res = {};
-    const result = await this.app.mysql.insert('destroy', requestMsg);
+
+    const result = await this.app.mysql.insert('holder', requestMsg);
 
     res.code = 1;
     res.message = 'success';
@@ -41,7 +39,7 @@ class destroyService extends Service {
     const ctx = this.ctx;
     const res = {};
 
-    const result = await this.app.mysql.update('destroy', requestMsg);
+    const result = await this.app.mysql.update('holder', requestMsg);
 
     res.code = 1;
     res.message = 'success';
@@ -54,35 +52,32 @@ class destroyService extends Service {
     const ctx = this.ctx;
     const res = {};
 
-    await this.app.mysql.delete('destroy', requestMsg);
+    await this.app.mysql.delete('holder', requestMsg);
 
     res.code = 1;
     res.message = 'success';
     return res;
   }
-  // info
-  async info(requestMsg){
+
+  // search
+  async search(requestMsg){
     const ctx = this.ctx;
     const res = {};
+    const address = requestMsg.address;
+    const limit = Number(requestMsg.limit) || 10;
+    const page = Number(requestMsg.page) || 1;
 
-    const result =  await this.app.mysql.get('destroy', requestMsg);
+    const results = await this.app.mysql.select('holder',{
+      where:{address:[address]},
+      limit: limit,
+      offset: limit * Number(page-1),
+    });
 
-    if (result){
-      res.code = 1;
-      res.message = 'success';
-      res.result = result;
-    } else {
-      res.code = 0;
-      res.message = '暂无数据';
-    }
+    res.code = 1;
+    res.message = 'success';
+    res.result = results;
     return res;
-  }
-
-  async count(){
-    const count = await this.app.mysql.query('SELECT COUNT(*) FROM `destroy`' );
-    const total = count.shift()['COUNT(*)'];
-    return total;
   }
 }
 
-module.exports = destroyService;
+module.exports = holderService;

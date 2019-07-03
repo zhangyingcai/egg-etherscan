@@ -21,4 +21,12 @@ module.exports = app => {
   router.post('/destroy/create', token, controller.destroy.create);
   router.post('/destroy/update', token, controller.destroy.update);
   router.post('/destroy/delete', token, controller.destroy.delete);
+  router.get('/destroy/info', controller.destroy.info);
+
+  // holder
+  router.get('/holder/list', controller.holder.list);
+  router.post('/holder/create', token, controller.holder.create);
+  router.post('/holder/update', token, controller.holder.update);
+  router.post('/holder/delete', token, controller.holder.delete);
+  router.get('/holder/search', controller.holder.search);
 }

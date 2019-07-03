@@ -75,6 +75,22 @@ class destroyController extends Controller {
     const result = await ctx.service.destroy.delete(requestMsg);
     ctx.body = result;
   }
+  // info
+  async info(){
+    const ctx = this.ctx;
+    
+    const rule = {
+      id: { type: 'number', required: true, message: '必填项' }
+    };
+
+    const requestMsg = ctx.query;
+    requestMsg.id = Number(requestMsg.id);
+    await ctx.validate(rule, requestMsg);
+
+    //server
+    const result = await ctx.service.destroy.info(requestMsg);
+    ctx.body = result;
+  }
 }
 
 module.exports = destroyController;
