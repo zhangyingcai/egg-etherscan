@@ -156,6 +156,21 @@ class TokenService extends Service {
     }
   }
 
+  // 获取流通量 token supply-官方地址量
+  async currency(){
+    const res = await this.app.mysql.get('config', { config_name: 'tokenbalance' });
+    let balance = 0;
+    if (res) {
+      balance = res.config_value / Math.pow(10, tokenDecimal);
+    }
+    const appres = await this.app.mysql.get('config', { config_name: 'appbalance' });
+    let appbalance = 0;
+    if (appres) {
+      appbalance = appres.config_value / Math.pow(10, tokenDecimal);
+    }
+    return balance - appbalance;
+  }
+
 }
 
 module.exports = TokenService;

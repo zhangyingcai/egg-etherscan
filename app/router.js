@@ -9,7 +9,7 @@ module.exports = app => {
   router.get('/txinfo', controller.tokentx.txinfo);
   router.get('/tokensupply', controller.tokentx.tokensupply);
   router.get('/transactions', controller.tokentx.transactions);
-
+  router.get('/currency', controller.tokentx.currency);
   // api
   // user
   router.post('/user/signin', controller.user.signin);

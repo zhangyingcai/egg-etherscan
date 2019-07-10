@@ -65,6 +65,11 @@ class tokentxController extends Controller {
     const total = await ctx.service.tokenapi.transactionTotal();
     this.success(result,total);
   }
+  async currency(){
+    const ctx = this.ctx;
+    const result = await ctx.service.token.currency();
+    this.success(result);
+  }
 }
 
 module.exports = tokentxController;

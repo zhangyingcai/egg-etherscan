@@ -38,11 +38,12 @@ class TokenApiService extends Service{
     const limit = Number(params.limit) || 10;
     // token balance tokenDecimal
     const balanceRes = await this.app.mysql.get('holder',{address:address});
-    let balance,tokenDecimal,tag = '';
+    let balance,tokenDecimal,tag = '',message='';
     if(balanceRes){
       balance = balanceRes.value;
       tokenDecimal = balanceRes.tokenDecimal;
       tag = balanceRes.tag;
+      message = balanceRes.message;
     }
     // token list
     const results = await this.app.mysql.query('SELECT * FROM `ethereum` WHERE `from` LIKE "' + address + '" OR `to` LIKE "' + address +'" ORDER BY `timeStamp` desc LIMIT '+Number(limit)+' OFFSET '+Number(limit) * Number(page-1) );
@@ -60,6 +61,7 @@ class TokenApiService extends Service{
       balance: balance,
       tokenDecimal: tokenDecimal,
       tag: tag,
+      message: message,
       contract:contractaddress,
       totalsupply: totalsupply,
       result:results,
