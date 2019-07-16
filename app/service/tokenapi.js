@@ -46,7 +46,7 @@ class TokenApiService extends Service{
       message = balanceRes.message;
     }
     // token list
-    const results = await this.app.mysql.query('SELECT * FROM `ethereum` WHERE `from` LIKE "' + address + '" OR `to` LIKE "' + address +'" ORDER BY `timeStamp` desc LIMIT '+Number(limit)+' OFFSET '+Number(limit) * Number(page-1) );
+    const results = await this.app.mysql.query('select ethereum.value,ethereum.hash,ethereum.tokenDecimal,ethereum.from,ethereum.to,ethereum.`timeStamp`,ethereum.id,a.tag as fromtag,b.tag as totag from `ethereum` left join `holder` as a on ethereum.from=a.address left join `holder` as b on ethereum.to = b.address WHERE ethereum.from LIKE "' + address + '" OR ethereum.to LIKE "' + address +'" ORDER BY `timeStamp` desc LIMIT '+Number(limit)+' OFFSET '+Number(limit) * Number(page-1) );
     const count = await this.app.mysql.query('SELECT COUNT(*) FROM `ethereum` WHERE `from` LIKE "' + address + '" OR `to` LIKE "' + address + '"' );
     console.log(count)
     // totalsupply
