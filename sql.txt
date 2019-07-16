@@ -19,11 +19,11 @@ CREATE TABLE `ethereum` (
   `gas`  varchar(250) DEFAULT NULL,
   `gasPrice`  varchar(250) DEFAULT NULL,
   `gasUsed`  varchar(250) DEFAULT NULL,
-  `status` tinyint(3) unsigned DEFAULT NULL COMMENT '数据处理状态： 0 - 未处理 1 - 已处理,有效数据 2 - 已处理，无效数据',
   PRIMARY KEY (`id`),
   UNIQUE KEY `UQ_hash` (`hash`) USING BTREE,
   KEY `IX_block` (`blockNumber`) USING BTREE,
   KEY `IX_from` (`from`) USING BTREE
+  KEY `IX_to` (`to`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=586 DEFAULT CHARSET=utf8;
 
 
@@ -42,14 +42,69 @@ CREATE TABLE `holder` (
   `tokenDecimal` int(10) UNSIGNED DEFAULT NULL COMMENT '位数',
   `percentage` DECIMAL(20,5) DEFAULT NULL,
   `tag` varchar(250) DEFAULT NULL,
+  `info` varchar(250) DEFAULT NULL,
   `created` int(20) unsigned DEFAULT NULL COMMENT '创建（导入）时间',
   `updated` int(20) unsigned DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `UQ_address` (`address`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=586 DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `destroy`;
+CREATE TABLE `destroy` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `value` varchar(250) DEFAULT NULL,
+  `hash` varchar(250) DEFAULT NULL,
+  `message` varchar(250) DEFAULT NULL,
+  `timeStamp` int(20) unsigned DEFAULT NULL COMMENT '时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UQ_hash` (`hash`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=586 DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `ethereum_destroy`;
+CREATE TABLE `ethereum_destroy` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `hash` varchar(250) DEFAULT NULL COMMENT 'txhash',
+  `from` varchar(250) DEFAULT NULL,
+  `to` varchar(250) DEFAULT NULL,
+  `blockHash` varchar(250) DEFAULT NULL,
+  `blockNumber` int(10) UNSIGNED DEFAULT NULL,
+  `timeStamp` int(10) UNSIGNED DEFAULT NULL,
+  `nonce` int(10) UNSIGNED DEFAULT NULL,
+  `value`  varchar(250) DEFAULT NULL,
+  `confirmations` int(10) UNSIGNED DEFAULT NULL COMMENT '确认数',
+  `tokenDecimal` int(10) UNSIGNED DEFAULT NULL COMMENT '位数',
+  `tokenName`  varchar(250) DEFAULT NULL,
+  `tokenSymbol`  varchar(250) DEFAULT NULL,
+  `transactionIndex` varchar(250) DEFAULT NULL,
+  `input` varchar(250) DEFAULT NULL,
+  `cumulativeGasUsed`  varchar(250) DEFAULT NULL,
+  `gas`  varchar(250) DEFAULT NULL,
+  `gasPrice`  varchar(250) DEFAULT NULL,
+  `gasUsed`  varchar(250) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UQ_hash` (`hash`) USING BTREE,
+  KEY `IX_block` (`blockNumber`) USING BTREE,
+  KEY `IX_from` (`from`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=586 DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE `user` (
+  `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT COMMENT '用户编号',
+  `userName` varchar(20) DEFAULT NULL COMMENT '用户名，可用于登录,唯一',
+  `userPass` varchar(120) NOT NULL COMMENT '用户加密密码',
+  `googleSecret` varchar(20) DEFAULT NULL COMMENT '谷歌密文',
+  `created` int(10) unsigned DEFAULT NULL COMMENT '注册时间',
+  PRIMARY KEY (`id`)
+) AUTO_INCREMENT=24 DEFAULT CHARSET=utf8 COMMENT='用户基础表';
+
+INSERT INTO `user` (`id`, `userName`, `userPass`, `googleSecret`, `created`) VALUES (NULL, 'admin', '2ff67c951e18c525e76c986b9bf2489d', NULL, NULL);
+
 select  * as totag
 from(select * from `ethereum`  left join `holder` on ethereum.from=holder.address)as a,(select holder.tag from `ethereum`  left join `holder` on ethereum.to=holder.address)as b order by id limit 10 offset 0
 
 select  * 
-from( select holder.tag as fromtag from `ethereum`  left join `holder` on ethereum.from=holder.address)as a,(select holder.tag as totag from `ethereum`  left join `holder` on ethereum.to = holder.address ) as b
+from( select ethereum.id,holder.tag as fromtag from `ethereum`  left join `holder` on ethereum.from=holder.address)as a left join (select ethereum.id,holder.tag as totag from `ethereum`  left join `holder` on ethereum.to = holder.address ) as b
+on a.id = b.id
+
+select ethereum.value,ethereum.hash,ethereum.tokenDecimal,ethereum.from,ethereum.to,ethereum.`timeStamp`,ethereum.id,a.tag as fromtag,b.tag as totag from `ethereum` left join `holder` as a on ethereum.from=a.address left join `holder` as b on ethereum.to = b.address
