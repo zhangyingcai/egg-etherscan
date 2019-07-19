@@ -30,9 +30,7 @@ class holderController extends Controller {
 
     const requestMsg = ctx.request.body;
     
-    requestMsg.timeStamp = Number(requestMsg.timeStamp);
     await ctx.validate(rule, requestMsg);
-
     //server
     const result = await ctx.service.holder.create(requestMsg);
     ctx.body = result;

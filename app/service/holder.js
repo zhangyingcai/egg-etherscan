@@ -15,9 +15,12 @@ class holderService extends Service {
       offset: limit * Number(page-1),
     });
 
+    const total = await this.count()
+
     res.code = 1;
     res.message = 'success';
     res.result = results;
+    res.total = total;
     return res;
   }
 
@@ -77,6 +80,12 @@ class holderService extends Service {
     res.message = 'success';
     res.result = results;
     return res;
+  }
+
+  async count(){
+    const count = await this.app.mysql.query('SELECT COUNT(*) FROM `holder`' );
+    const total = count.shift()['COUNT(*)'];
+    return total;
   }
 }
 
