@@ -25,10 +25,7 @@ class holderController extends Controller {
     const ctx = this.ctx;
     
     const rule = {
-      value: { type: 'string', required: true, message: '必填项' },
-      hash: { type: 'string', required: true, message: '必填项' },
-      message: { type: 'string', required: false },
-      timeStamp: { type: 'number', required: true, message: '必填项' },
+      address: { type: 'string', required: true, message: '必填项' }
     };
 
     const requestMsg = ctx.request.body;
