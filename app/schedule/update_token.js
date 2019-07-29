@@ -1,17 +1,13 @@
-const Subscription = require('egg').Subscription;
-
-class UpdateToken extends Subscription {
-  // 配置信息
-  static get schedule(){
-    return {
-      interval: '10m',
+module.exports = app => {
+  return {
+    schedule:{
+      interval: app.config.scheduleTime.token,
       type: 'all'
+    },
+    async task(ctx){
+      // 更新最新的交易数据
+      console.log(app.config.scheduleTime.token)
+      ctx.service.token.update();
     }
   }
-  
-  async subscribe(){
-    this.ctx.service.token.update();
-  }
-}
-
-module.exports = UpdateToken;
+};

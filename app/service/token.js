@@ -86,7 +86,10 @@ class TokenService extends Service {
 
   // update all holders
   async holder() {
-    const timer = new Date().getTime() / 1000 - 2 * 60 * 60;
+    const { app } = this;
+    const times = app.config.scheduleTime.holderTime || 24;
+    // 每两个小时更新一次
+    const timer = new Date().getTime() / 1000 - times * 60 * 60;
     // 获取中数量
     const res = await this.app.mysql.get('config', { config_name: 'tokenbalance' });
     let balance = 0;
@@ -145,7 +148,7 @@ class TokenService extends Service {
       this.app.mysql.update('config', { config_value: supply }, { where: { config_name: 'tokenbalance' } });
     }
   }
-
+  // 获取 BCAT 官方地址量
   async appsupply(){
     const appbalance = await this.balance(appeth);
     const isexsit = await this.app.mysql.get('config',{config_name:'appbalance'})
