@@ -53,3 +53,11 @@ exports.security = {
     enable: false,
   },
 };
+
+exports.scheduleTime = {
+  holder: '1m', // 时间 / 5条  更新排名
+  appsupply: '24h', // 获取 BCAT 官方地址量
+  supply: '24h', // 获取 BCAT 供给量,
+  token: '1h', // 更新最新的交易数据
+  holderTime: 2 // 当前更新周期 单位：小时 必须是数字，因http://api.etherscan.io接口限制 5次/s，当前查询周期/更新排名时间 * 5 应该大于 当前地址排行数量
+}
