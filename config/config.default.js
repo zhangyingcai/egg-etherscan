@@ -18,6 +18,13 @@ exports.tokenDecimal = 18;
 
 // 单个数据库配置
 exports.mysql = {
+  // client: {
+  //   host: '47.56.70.166',
+  //   port: '3306',
+  //   user: 'ces',
+  //   password: 'nKPQt5Tm',
+  //   database: 'ces'
+  // },
   client: {
     host: 'localhost',
     port: '3306',
@@ -60,4 +67,10 @@ exports.scheduleTime = {
   supply: '24h', // 获取 BCAT 供给量,
   token: '1h', // 更新最新的交易数据
   holderTime: 2 // 当前更新周期 单位：小时 必须是数字，因http://api.etherscan.io接口限制 5次/s，当前查询周期/更新排名时间 * 5 应该大于 当前地址排行数量
+}
+
+// bcat.one 文章
+exports.bcatone = {
+  url: 'https://www.bcat.one/wp-json/wp/v2/posts?categories=4',
+  bcatone: '1m'
 }
