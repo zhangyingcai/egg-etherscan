@@ -29,4 +29,6 @@ module.exports = app => {
   router.post('/holder/update', token, controller.holder.update);
   router.post('/holder/delete', token, controller.holder.delete);
   router.get('/holder/search', controller.holder.search);
+  // bcatone
+  router.get('/bcatone/list', controller.bcatone.list);
 }

@@ -108,3 +108,16 @@ from( select ethereum.id,holder.tag as fromtag from `ethereum`  left join `holde
 on a.id = b.id
 
 select ethereum.value,ethereum.hash,ethereum.tokenDecimal,ethereum.from,ethereum.to,ethereum.`timeStamp`,ethereum.id,a.tag as fromtag,b.tag as totag from `ethereum` left join `holder` as a on ethereum.from=a.address left join `holder` as b on ethereum.to = b.address
+
+
+// 新增 文章
+
+DROP TABLE IF EXISTS `bcatone`;
+CREATE TABLE `bcatone` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `link` varchar(250) DEFAULT NULL COMMENT 'link',
+  `title` varchar(250) DEFAULT NULL COMMENT 'title',
+  `timeStamp` int(10) UNSIGNED DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UQ_link` (`link`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
